@@ -2,7 +2,13 @@ import streamlit as st
 import numpy as np
 import random
 import time
-import matplotlib.pyplot as plt
+
+# Try to import matplotlib.pyplot and handle import errors
+try:
+    import matplotlib.pyplot as plt
+except ImportError as e:
+    st.error("Matplotlib is not installed. Please install it to run this app.")
+    raise e  # Stop execution if Matplotlib is not available
 
 # Game constants
 GRID_SIZE = 20
@@ -13,7 +19,7 @@ def init_game():
     return {
         "snake": [(5, 5), (5, 4), (5, 3)],
         "direction": (0, 1),
-        "food": (random.randint(0, GRID_SIZE-1), random.randint(0, GRID_SIZE-1)),
+        "food": (random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1)),
         "score": 0,
         "game_over": False
     }
@@ -54,7 +60,7 @@ def update_game(game_state):
         game_state["score"] += 1
         # Generate new food
         while True:
-            new_food = (random.randint(0, GRID_SIZE-1), random.randint(0, GRID_SIZE-1))
+            new_food = (random.randint(0, GRID_SIZE - 1), random.randint(0, GRID_SIZE - 1))
             if new_food not in snake:
                 game_state["food"] = new_food
                 break
