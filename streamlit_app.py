@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import random
 import time
+import matplotlib.pyplot as plt
 
 # Game constants
 GRID_SIZE = 20
@@ -19,11 +20,14 @@ def init_game():
 
 # Draw the game grid
 def draw_grid(game_state):
-    grid = np.zeros((GRID_SIZE, GRID_SIZE))
+    grid = np.zeros((GRID_SIZE, GRID_SIZE, 3), dtype=int)
+    
     for x, y in game_state["snake"]:
-        grid[x, y] = 1  # Snake body
+        grid[x, y] = [0, 255, 0]  # Snake body (green)
+        
     food_x, food_y = game_state["food"]
-    grid[food_x, food_y] = 2  # Food
+    grid[food_x, food_y] = [255, 0, 0]  # Food (red)
+    
     return grid
 
 # Update the game state
@@ -64,14 +68,18 @@ def update_game(game_state):
 # Streamlit app
 def main():
     st.title("Snake Game")
-    st.markdown("Use arrow keys to control the snake.")
+    st.markdown("Use the dropdown to control the snake.")
 
     game_state = init_game()
 
     # Game loop
     while not game_state["game_over"]:
         grid = draw_grid(game_state)
-        st.image(grid, caption="Snake Game", width=GRID_SIZE * CELL_SIZE, use_column_width=False)
+        
+        # Display the grid using matplotlib
+        plt.imshow(grid)
+        plt.axis('off')  # Hide axes
+        st.pyplot(plt)
 
         # Get user input for direction
         direction = st.selectbox("Direction", ["Up", "Down", "Left", "Right"], index=1)
